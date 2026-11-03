@@ -6,10 +6,11 @@ const tableView = new TableView();
 export function startApp() {
 
     const sampleData = ["cat", "dog", "monkey"];
-    tableView.displayData(document.body, sampleData, ()=> {
-        // on row selected
-    })
+    tableView.displayData(document.body, sampleData, (rowNumber)=> {
 
+        // on row selected
+        // alert(rowNumber);
+    })
 }
 
 

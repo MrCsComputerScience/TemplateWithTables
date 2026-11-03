@@ -1,15 +1,26 @@
 
 // EXAMPLE: TABLE VIEW
 //
-// let tableView = new TableView();
-// let data = ["x", "b"];
+// import { TableView } from "./myUIElements";
+//
+//
+// const tableView = new TableView();
 //
 // export function startApp() {
 //
-//     tableView.displayData(document.body, data);
+//     const sampleData = ["cat", "dog", "monkey"];
+//     tableView.displayData(document.body, sampleData, (rowNumber)=> {
+//
+//         // on row selected
+//         // alert(rowNumber);
+//     })
 // }
+//
+
 
 export class TableView {
+
+    private lastRowSelected: HTMLElement | undefined = undefined;
 
     displayData(targetView: HTMLElement, arrayOfDisplayText: Array<string>, onRowSelected: (rowNumber: number)=>void) {
 
@@ -17,14 +28,36 @@ export class TableView {
 
         for (const text of arrayOfDisplayText) {
             
+            // make copy of number that isn't going to change (if put it inside onclick, just have reference to changing value)
+            const rowID = rowNumber;  
+            const rowNumberAsString = rowNumber + "";
+
             const textElement = document.createElement("p");
             textElement.textContent = text;
             textElement.style.whiteSpace = "pre-wrap"; 
+            textElement.id = rowNumberAsString;
             textElement.onclick = () => { 
 
-                if (onRowSelected !== undefined) {
-                    onRowSelected(rowNumber);
+                // record/show selection
+                if (this.lastRowSelected === undefined) {
+
+                    this.lastRowSelected = textElement;
+                    textElement.style.backgroundColor = "gray";
+
+                } else if (this.lastRowSelected.id === rowNumberAsString) {
+
+                    this.lastRowSelected = undefined;
+                    textElement.style.background = "white";
+
+                } else {
+                    
+                    this.lastRowSelected.style.backgroundColor = "white";
+                    this.lastRowSelected = textElement;
+                    textElement.style.backgroundColor = "gray";
                 }
+
+                // report back
+                onRowSelected(rowID);
             }
   
             targetView.append(textElement);
